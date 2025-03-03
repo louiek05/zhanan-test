@@ -94,15 +94,60 @@ button:hover {
 }
 
 #score {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
     color: #2c3e50;
     margin: 1.5rem 0;
     font-weight: bold;
 }
 
+.chart-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.gender-selection {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.gender-btn {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+}
+
+#male-btn {
+    background: #3498db;
+}
+
+#male-btn:hover {
+    background: #2980b9;
+}
+
+#female-btn {
+    background: #e84393;
+}
+
+#female-btn:hover {
+    background: #d63031;
+}
+
 #result-text {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: #34495e;
     margin: 1.5rem 0;
-    line-height: 1.6;
+    line-height: 1.8;
+    text-align: left;
+    white-space: pre-line;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    max-width: 100%;
 } 
