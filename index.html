@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>渣男測試</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 開始畫面 -->
+        <div id="start-screen" class="screen">
+            <h1>渣男測試</h1>
+            <p>準備好測試自己是不是渣男了嗎？</p>
+            <button id="start-btn">開始測驗</button>
+        </div>
+
+        <!-- 問題畫面 -->
+        <div id="question-screen" class="screen hidden">
+            <div class="question-container">
+                <h2 id="question-text"></h2>
+            </div>
+            <div class="buttons">
+                <button id="agree-btn">同意</button>
+                <button id="disagree-btn">不同意</button>
+            </div>
+        </div>
+
+        <!-- 結果畫面 -->
+        <div id="result-screen" class="screen hidden">
+            <h2>測試結果</h2>
+            <div id="score"></div>
+            <div id="result-text"></div>
+            <button id="restart-btn">重新測試</button>
+        </div>
+    </div>
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
