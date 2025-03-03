@@ -1,4 +1,5 @@
-const questions = {
+// 將 questions 對象設為全局變量
+window.questions = {
     male: {
         // 花心型渣男的特徵問題
         flirty: [
@@ -159,4 +160,7 @@ function getRandomQuestions(count = 15, gender) {
     
     // 隨機打亂並只返回需要的數量
     return allQuestions.sort(() => 0.5 - Math.random()).slice(0, count);
-} 
+}
+
+// 將函數設為全局變量
+window.getRandomQuestions = getRandomQuestions; 

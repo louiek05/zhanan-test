@@ -54,21 +54,35 @@ restartBtn.addEventListener('click', () => {
 });
 
 function startTest() {
-    // 重置所有分數
-    for (let type in scores) {
-        scores[type] = 0;
+    try {
+        // 重置所有分數
+        for (let type in scores) {
+            scores[type] = 0;
+        }
+        
+        // 根據性別獲取問題
+        if (typeof getRandomQuestions !== 'function') {
+            console.error('getRandomQuestions is not defined');
+            return;
+        }
+        
+        currentQuestions = getRandomQuestions(15, currentGender);
+        if (!currentQuestions || currentQuestions.length === 0) {
+            console.error('No questions generated');
+            return;
+        }
+        
+        currentQuestionIndex = 0;
+        
+        // 隱藏開始畫面，顯示問題畫面
+        startScreen.classList.add('hidden');
+        questionScreen.classList.remove('hidden');
+        resultScreen.classList.add('hidden');
+        
+        showQuestion();
+    } catch (error) {
+        console.error('Error in startTest:', error);
     }
-    
-    // 根據性別獲取問題
-    currentQuestions = getRandomQuestions(15, currentGender);
-    currentQuestionIndex = 0;
-    
-    // 隱藏開始畫面，顯示問題畫面
-    startScreen.classList.add('hidden');
-    questionScreen.classList.remove('hidden');
-    resultScreen.classList.add('hidden');
-    
-    showQuestion();
 }
 
 function showQuestion() {
