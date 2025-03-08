@@ -63,6 +63,9 @@ disagreeBtn.addEventListener('click', () => {
 
 // 重新開始
 document.getElementById('restart-btn').addEventListener('click', () => {
+    // 移除問題模式的背景
+    document.body.classList.remove('question-mode');
+    
     startScreen.classList.remove('hidden');
     questionScreen.classList.add('hidden');
     resultDiv.style.display = 'none';
@@ -98,6 +101,9 @@ function startTest() {
         questionScreen.classList.remove('hidden');
         resultDiv.style.display = 'none';
         
+        // 添加問題模式的背景
+        document.body.classList.add('question-mode');
+        
         showQuestion();
     } catch (error) {
         console.error('Error in startTest:', error);
@@ -125,6 +131,9 @@ function nextQuestion() {
 }
 
 function showResult() {
+    // 移除問題模式的背景
+    document.body.classList.remove('question-mode');
+    
     questionScreen.classList.add('hidden');
     resultDiv.style.display = 'block';
     
