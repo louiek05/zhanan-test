@@ -39,7 +39,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 50vh;
     z-index: 0;
 }
 
@@ -56,28 +56,34 @@ body {
 #start-screen {
     width: 100%;
     min-height: 100vh;
-    background: rgba(0, 0, 0, 0.7);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 50%);
     color: white;
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     position: relative;
     z-index: 2;
+    padding-top: 55vh;
 }
 
 #start-screen h1 {
     color: white;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    font-size: 2.8rem;
-    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    width: 100%;
+    padding: 0 1rem;
 }
 
 #start-screen p {
     color: white;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    font-size: 1.4rem;
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
 }
 
 .nickname-input {
@@ -110,7 +116,10 @@ body {
 .gender-selection {
     display: flex;
     gap: 1rem;
-    margin-top: 2rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
 }
 
 .gender-btn {
@@ -338,4 +347,41 @@ button:hover {
 .history-date {
     color: #666;
     font-size: 0.9em;
+}
+
+@media screen and (max-width: 768px) {
+    .start-image {
+        height: 40vh;
+    }
+
+    #start-screen {
+        padding-top: 45vh;
+    }
+
+    #start-screen h1 {
+        font-size: 2rem;
+    }
+
+    #start-screen p {
+        font-size: 1.1rem;
+    }
+
+    .gender-selection {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .gender-btn {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    #start-screen h1 {
+        font-size: 1.8rem;
+    }
+
+    #start-screen p {
+        font-size: 1.1rem;
+    }
 } 

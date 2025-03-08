@@ -32,12 +32,14 @@ nicknameInput.addEventListener('input', () => {
 
 // 性別選擇按鈕
 maleBtn.addEventListener('click', () => {
+    if (!nicknameInput.value.trim()) return;
     currentGender = 'male';
     currentNickname = nicknameInput.value.trim();
     startTest();
 });
 
 femaleBtn.addEventListener('click', () => {
+    if (!nicknameInput.value.trim()) return;
     currentGender = 'female';
     currentNickname = nicknameInput.value.trim();
     startTest();
@@ -69,6 +71,7 @@ document.getElementById('restart-btn').addEventListener('click', () => {
 
 function startTest() {
     try {
+        console.log('Starting test...');
         // 重置所有分數
         for (let type in scores) {
             scores[type] = 0;
@@ -81,6 +84,8 @@ function startTest() {
         }
         
         currentQuestions = window.getRandomQuestions(15, currentGender);
+        console.log('Generated questions:', currentQuestions);
+        
         if (!currentQuestions || currentQuestions.length === 0) {
             console.error('No questions generated');
             return;
@@ -100,10 +105,17 @@ function startTest() {
 }
 
 function showQuestion() {
-    if (currentQuestionIndex < currentQuestions.length) {
-        questionText.textContent = currentQuestions[currentQuestionIndex].text;
-    } else {
-        showResult();
+    try {
+        console.log('Showing question:', currentQuestionIndex);
+        if (currentQuestionIndex < currentQuestions.length) {
+            const question = currentQuestions[currentQuestionIndex];
+            console.log('Current question:', question);
+            questionText.textContent = question.text;
+        } else {
+            showResult();
+        }
+    } catch (error) {
+        console.error('Error in showQuestion:', error);
     }
 }
 
