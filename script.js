@@ -47,7 +47,10 @@ femaleBtn.addEventListener('click', () => {
 agreeBtn.addEventListener('click', () => {
     const currentQuestion = currentQuestions[currentQuestionIndex];
     const questionType = currentQuestion.type;
-    scores[questionType]++;
+    // 只有非正向題目才計分
+    if (questionType !== 'positive') {
+        scores[questionType]++;
+    }
     nextQuestion();
 });
 
@@ -118,9 +121,24 @@ function showResult() {
     const maxScore = Math.max(...Object.values(scores));
     const maxTypes = Object.entries(scores)
         .filter(([_, score]) => score === maxScore && score > 0)
-        .map(([type, _]) => getTypeDescription(type, currentGender));
+        .map(([type, _]) => type);
     
     let resultMessage = '';
+    
+    // 設置背景圖片
+    if (maxTypes.length > 0) {
+        const mainType = maxTypes[0];
+        const gender = currentGender;
+        const backgroundImage = getTypeBackgroundImage(mainType, gender);
+        resultDiv.style.backgroundImage = `url(${backgroundImage})`;
+        resultDiv.style.backgroundSize = 'cover';
+        resultDiv.style.backgroundPosition = 'center';
+        resultDiv.style.backgroundRepeat = 'no-repeat';
+        resultDiv.style.position = 'relative';
+        
+        // 添加半透明遮罩，確保文字清晰可見
+        resultDiv.style.backgroundColor = 'rgba(255, 255, 255, 0.85)';
+    }
     
     // 主要評語（放大字體）
     if (totalScore <= 5) {
@@ -145,7 +163,7 @@ function showResult() {
     // 如果有明顯特徵，顯示在評語下方
     if (maxTypes.length > 0) {
         resultMessage += `\n你最明顯的${currentGender === 'male' ? '渣男' : '渣女'}特徵是：\n`;
-        resultMessage += maxTypes.map(type => `• ${type}`).join('\n');
+        resultMessage += maxTypes.map(type => `• ${getTypeDescription(type, currentGender)}`).join('\n');
     }
     
     resultText.textContent = resultMessage;
@@ -177,6 +195,27 @@ function getTypeDescription(type, gender) {
         }
     };
     return descriptions[gender][type];
+}
+
+// 獲取類型對應的背景圖片
+function getTypeBackgroundImage(type, gender) {
+    const images = {
+        male: {
+            flirty: 'images/male-flirty.jpg',      // 花心型渣男
+            cold: 'images/male-cold.jpg',          // 冷暴力型渣男
+            scammer: 'images/male-scammer.jpg',    // 吃軟飯渣男
+            controller: 'images/male-controller.jpg', // 控制狂渣男
+            liar: 'images/male-liar.jpg'           // 死皮賴臉型渣男
+        },
+        female: {
+            flirty: 'images/female-flirty.jpg',    // 花心型渣女
+            cold: 'images/female-cold.jpg',        // 冷暴力型渣女
+            scammer: 'images/female-scammer.jpg',  // 超拜金渣女
+            controller: 'images/female-controller.jpg', // 控制狂渣女
+            liar: 'images/female-liar.jpg'         // 臭公主型渣女
+        }
+    };
+    return images[gender][type];
 }
 
 // 自動保存結果到 Firebase
