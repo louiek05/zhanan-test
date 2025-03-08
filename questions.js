@@ -147,19 +147,29 @@ window.questions = {
 
 // 從每個類型中隨機選擇問題
 function getRandomQuestions(count = 15, gender) {
-    let allQuestions = [];
-    const typeCount = Object.keys(questions[gender]).length;
-    const questionsPerType = Math.ceil(count / typeCount);
-    
-    // 從每個類型中選擇相同數量的問題
-    for (let type in questions[gender]) {
-        const typeQuestions = questions[gender][type];
-        const shuffled = [...typeQuestions].sort(() => 0.5 - Math.random());
-        allQuestions = allQuestions.concat(shuffled.slice(0, questionsPerType));
+    try {
+        if (!window.questions || !window.questions[gender]) {
+            console.error('Questions not found for gender:', gender);
+            return [];
+        }
+
+        let allQuestions = [];
+        const typeCount = Object.keys(window.questions[gender]).length;
+        const questionsPerType = Math.ceil(count / typeCount);
+        
+        // 從每個類型中選擇相同數量的問題
+        for (let type in window.questions[gender]) {
+            const typeQuestions = window.questions[gender][type];
+            const shuffled = [...typeQuestions].sort(() => 0.5 - Math.random());
+            allQuestions = allQuestions.concat(shuffled.slice(0, questionsPerType));
+        }
+        
+        // 隨機打亂並只返回需要的數量
+        return allQuestions.sort(() => 0.5 - Math.random()).slice(0, count);
+    } catch (error) {
+        console.error('Error in getRandomQuestions:', error);
+        return [];
     }
-    
-    // 隨機打亂並只返回需要的數量
-    return allQuestions.sort(() => 0.5 - Math.random()).slice(0, count);
 }
 
 // 將函數設為全局變量

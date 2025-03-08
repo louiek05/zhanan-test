@@ -209,4 +209,12 @@ button:hover {
 .history-date {
     color: #666;
     font-size: 0.9em;
+}
+
+#restart-btn {
+    background-color: #4CAF50;
+}
+
+#restart-btn:hover {
+    background-color: #45a049;
 } 
