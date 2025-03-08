@@ -12,7 +12,7 @@ let scores = {
 // DOM 元素
 const startScreen = document.getElementById('start-screen');
 const questionScreen = document.getElementById('question-screen');
-const resultScreen = document.getElementById('result-screen');
+const resultDiv = document.getElementById('result');
 const maleBtn = document.getElementById('male-btn');
 const femaleBtn = document.getElementById('female-btn');
 const agreeBtn = document.getElementById('agree-btn');
@@ -21,6 +21,16 @@ const questionText = document.getElementById('question-text');
 const scoreElement = document.getElementById('score');
 const resultText = document.getElementById('result-text');
 const restartBtn = document.getElementById('restart-btn');
+
+// 分享相關的 DOM 元素
+const shareDialog = document.getElementById('share-dialog');
+const shareBtn = document.getElementById('share-result');
+const confirmShareBtn = document.getElementById('confirm-share');
+const cancelShareBtn = document.getElementById('cancel-share');
+const nicknameInput = document.getElementById('nickname');
+const shareMessageInput = document.getElementById('share-message');
+const personalHistoryTab = document.getElementById('personal-history-tab');
+const sharedHistoryTab = document.getElementById('shared-history-tab');
 
 // 性別選擇按鈕
 maleBtn.addEventListener('click', () => {
@@ -50,7 +60,58 @@ disagreeBtn.addEventListener('click', () => {
 restartBtn.addEventListener('click', () => {
     startScreen.classList.remove('hidden');
     questionScreen.classList.add('hidden');
-    resultScreen.classList.add('hidden');
+    resultDiv.style.display = 'none';
+});
+
+// 顯示分享對話框
+shareBtn.addEventListener('click', () => {
+    shareDialog.style.display = 'flex';
+});
+
+// 取消分享
+cancelShareBtn.addEventListener('click', () => {
+    shareDialog.style.display = 'none';
+    nicknameInput.value = '';
+    shareMessageInput.value = '';
+});
+
+// 確認分享
+confirmShareBtn.addEventListener('click', async () => {
+    const nickname = nicknameInput.value.trim() || '匿名用戶';
+    const message = shareMessageInput.value.trim();
+    const result = document.getElementById('result-text').textContent;
+    
+    try {
+        // 將結果保存到 Firebase
+        await database.ref('shared-results').push({
+            nickname,
+            message,
+            result,
+            gender: currentGender,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        });
+        
+        alert('分享成功！');
+        shareDialog.style.display = 'none';
+        nicknameInput.value = '';
+        shareMessageInput.value = '';
+    } catch (error) {
+        console.error('分享失敗：', error);
+        alert('分享失敗，請稍後再試。');
+    }
+});
+
+// 切換歷史記錄標籤
+personalHistoryTab.addEventListener('click', () => {
+    personalHistoryTab.classList.add('active');
+    sharedHistoryTab.classList.remove('active');
+    showPersonalHistory();
+});
+
+sharedHistoryTab.addEventListener('click', () => {
+    sharedHistoryTab.classList.add('active');
+    personalHistoryTab.classList.remove('active');
+    showSharedHistory();
 });
 
 function startTest() {
@@ -61,12 +122,12 @@ function startTest() {
         }
         
         // 根據性別獲取問題
-        if (typeof getRandomQuestions !== 'function') {
+        if (typeof window.getRandomQuestions !== 'function') {
             console.error('getRandomQuestions is not defined');
             return;
         }
         
-        currentQuestions = getRandomQuestions(15, currentGender);
+        currentQuestions = window.getRandomQuestions(15, currentGender);
         if (!currentQuestions || currentQuestions.length === 0) {
             console.error('No questions generated');
             return;
@@ -77,7 +138,7 @@ function startTest() {
         // 隱藏開始畫面，顯示問題畫面
         startScreen.classList.add('hidden');
         questionScreen.classList.remove('hidden');
-        resultScreen.classList.add('hidden');
+        resultDiv.style.display = 'none';
         
         showQuestion();
     } catch (error) {
@@ -100,7 +161,7 @@ function nextQuestion() {
 
 function showResult() {
     questionScreen.classList.add('hidden');
-    resultScreen.classList.remove('hidden');
+    resultDiv.style.display = 'block';
     
     // 計算總分和最高分的類型
     const totalScore = Object.values(scores).reduce((a, b) => a + b, 0);
@@ -185,11 +246,8 @@ function saveResult(result) {
     localStorage.setItem('testHistory', JSON.stringify(history));
 }
 
-// 顯示歷史記錄
-function showHistory() {
-    document.getElementById('result').style.display = 'none';
-    document.getElementById('history').style.display = 'block';
-    
+// 顯示個人歷史記錄
+function showPersonalHistory() {
     const historyList = document.getElementById('history-list');
     const history = JSON.parse(localStorage.getItem('testHistory') || '[]');
     
@@ -204,6 +262,54 @@ function showHistory() {
         `;
         historyList.appendChild(div);
     });
+}
+
+// 顯示分享的歷史記錄
+async function showSharedHistory() {
+    const historyList = document.getElementById('history-list');
+    historyList.innerHTML = '<div class="loading">載入中...</div>';
+    
+    try {
+        const snapshot = await database.ref('shared-results')
+            .orderByChild('timestamp')
+            .limitToLast(50)
+            .once('value');
+        
+        const sharedResults = [];
+        snapshot.forEach(child => {
+            sharedResults.push({
+                ...child.val(),
+                id: child.key
+            });
+        });
+        
+        historyList.innerHTML = '';
+        sharedResults.reverse().forEach(item => {
+            const date = new Date(item.timestamp).toLocaleString();
+            const div = document.createElement('div');
+            div.className = 'history-item shared-item';
+            div.innerHTML = `
+                <div class="shared-info">
+                    <span class="shared-nickname">${item.nickname}</span>
+                    <span class="history-date">${date}</span>
+                </div>
+                <div class="history-gender">性別：${item.gender === 'male' ? '男生' : '女生'}</div>
+                ${item.message ? `<div class="shared-message">${item.message}</div>` : ''}
+                <div class="history-result">${item.result}</div>
+            `;
+            historyList.appendChild(div);
+        });
+    } catch (error) {
+        console.error('載入分享記錄失敗：', error);
+        historyList.innerHTML = '<div class="error">載入失敗，請稍後再試</div>';
+    }
+}
+
+// 修改原有的 showHistory 函數
+function showHistory() {
+    document.getElementById('result').style.display = 'none';
+    document.getElementById('history').style.display = 'block';
+    showPersonalHistory(); // 預設顯示個人歷史記錄
 }
 
 // 清除歷史記錄
