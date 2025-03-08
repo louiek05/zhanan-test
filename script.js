@@ -124,7 +124,7 @@ function showResult() {
     
     // 主要評語（放大字體）
     if (totalScore <= 5) {
-        resultMessage = `✨ 哇你悶是一個乖寶寶！✨\n`;
+        resultMessage = `✨ 哇你真是一個乖寶寶！✨\n`;
         resultText.style.color = "#27ae60";  // 綠色
     } else if (totalScore <= 7) {
         resultMessage = `⚠️ 唉呦你有點小渣渣的嫌疑喔！⚠️\n`;
