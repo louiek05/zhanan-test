@@ -14,12 +14,11 @@ body {
 }
 
 .container {
-    background: white;
-    padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 600px;
+    background: transparent;
+    box-shadow: none;
+    max-width: 100%;
+    width: 100%;
+    padding: 0;
 }
 
 .screen {
@@ -33,32 +32,118 @@ body {
 
 .start-image {
     width: 100%;
-    max-width: 400px;
-    margin: 1rem 0;
-    border-radius: 15px;
+    max-width: none;
+    margin: 0;
+    border-radius: 0;
     overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: -1;
 }
 
 .start-image img {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
     display: block;
-    transition: transform 0.3s ease;
 }
 
-.start-image img:hover {
-    transform: scale(1.05);
+/* 調整開始畫面的其他元素樣式，確保在圖片上方清晰可見 */
+#start-screen {
+    position: relative;
+    min-height: 100vh;
+    background: rgba(0, 0, 0, 0.5); /* 半透明黑色背景 */
+    color: white;
+    padding: 2rem;
+}
+
+#start-screen h1 {
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-size: 2.8rem;
+    margin-bottom: 2rem;
+}
+
+#start-screen p {
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    font-size: 1.4rem;
+}
+
+.nickname-input {
+    margin-bottom: 1.5rem;
+    width: 100%;
+    max-width: 300px;
+}
+
+.nickname-input input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid white;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.nickname-input input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}
+
+.nickname-input input::placeholder {
+    color: #95a5a6;
+}
+
+.gender-selection {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.gender-btn {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    background: rgba(52, 152, 219, 0.9);
+    border: 2px solid white;
+}
+
+.gender-btn:hover {
+    background: rgba(41, 128, 185, 0.9);
+    transform: translateY(-2px);
+}
+
+#female-btn {
+    background: rgba(232, 67, 147, 0.9);
+}
+
+#female-btn:hover {
+    background: rgba(214, 48, 49, 0.9);
+}
+
+.gender-btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 其他畫面樣式 */
+#question-screen, #result, #history {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 600px;
 }
 
 .hidden {
     display: none;
-}
-
-h1 {
-    color: #2c3e50;
-    margin-bottom: 1.5rem;
-    font-size: 2.5rem;
 }
 
 h2 {
@@ -67,10 +152,19 @@ h2 {
     font-size: 2rem;
 }
 
-p {
-    color: #7f8c8d;
-    margin-bottom: 2rem;
-    font-size: 1.2rem;
+.question-container {
+    margin: 2rem 0;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
 }
 
 button {
@@ -90,27 +184,25 @@ button:hover {
     transform: translateY(-2px);
 }
 
-.question-container {
-    margin: 2rem 0;
-    min-height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 2rem;
-}
-
 #disagree-btn {
     background: #e74c3c;
 }
 
 #disagree-btn:hover {
     background: #c0392b;
+}
+
+#result-text {
+    font-size: 1.2rem;
+    color: #34495e;
+    margin: 1.5rem 0;
+    line-height: 1.8;
+    text-align: left;
+    white-space: pre-line;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    max-width: 100%;
 }
 
 #score {
@@ -128,146 +220,6 @@ button:hover {
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.gender-selection {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-}
-
-.gender-btn {
-    padding: 15px 30px;
-    font-size: 1.2rem;
-    border-radius: 30px;
-    transition: all 0.3s ease;
-}
-
-#male-btn {
-    background: #3498db;
-}
-
-#male-btn:hover {
-    background: #2980b9;
-}
-
-#female-btn {
-    background: #e84393;
-}
-
-#female-btn:hover {
-    background: #d63031;
-}
-
-#result-text {
-    font-size: 1.2rem;
-    color: #34495e;
-    margin: 1.5rem 0;
-    line-height: 1.8;
-    text-align: left;
-    white-space: pre-line;
-    padding: 1rem;
-    background: #f8f9fa;
-    border-radius: 10px;
-    max-width: 100%;
-}
-
-.btn {
-    padding: 10px 20px;
-    margin: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.btn:hover {
-    background-color: #45a049;
-}
-
-#save-result {
-    background-color: #2196F3;
-}
-
-#save-result:hover {
-    background-color: #1976D2;
-}
-
-#view-history {
-    background-color: #9C27B0;
-}
-
-#view-history:hover {
-    background-color: #7B1FA2;
-}
-
-#clear-history {
-    background-color: #f44336;
-}
-
-#clear-history:hover {
-    background-color: #d32f2f;
-}
-
-#history-list {
-    margin: 20px 0;
-    padding: 20px;
-    background-color: #f5f5f5;
-    border-radius: 5px;
-}
-
-.history-item {
-    padding: 10px;
-    margin: 10px 0;
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.history-date {
-    color: #666;
-    font-size: 0.9em;
-}
-
-#restart-btn {
-    background-color: #4CAF50;
-}
-
-#restart-btn:hover {
-    background-color: #45a049;
-}
-
-.nickname-input {
-    margin-bottom: 1.5rem;
-    width: 100%;
-    max-width: 300px;
-}
-
-.nickname-input input {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #3498db;
-    border-radius: 25px;
-    font-size: 1.1rem;
-    text-align: center;
-    transition: all 0.3s ease;
-}
-
-.nickname-input input:focus {
-    outline: none;
-    border-color: #2980b9;
-    box-shadow: 0 0 5px rgba(41, 128, 185, 0.5);
-}
-
-.nickname-input input::placeholder {
-    color: #95a5a6;
-}
-
-.gender-btn[disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
 }
 
 .history-tabs {
@@ -326,4 +278,56 @@ button:hover {
     text-align: center;
     padding: 2rem;
     color: #e74c3c;
+}
+
+#restart-btn {
+    background-color: #4CAF50;
+}
+
+#restart-btn:hover {
+    background-color: #45a049;
+}
+
+#save-result {
+    background-color: #2196F3;
+}
+
+#save-result:hover {
+    background-color: #1976D2;
+}
+
+#view-history {
+    background-color: #9C27B0;
+}
+
+#view-history:hover {
+    background-color: #7B1FA2;
+}
+
+#clear-history {
+    background-color: #f44336;
+}
+
+#clear-history:hover {
+    background-color: #d32f2f;
+}
+
+#history-list {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+
+.history-item {
+    padding: 10px;
+    margin: 10px 0;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.history-date {
+    color: #666;
+    font-size: 0.9em;
 } 
