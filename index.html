@@ -30,11 +30,19 @@
         </div>
 
         <!-- 結果畫面 -->
-        <div id="result-screen" class="screen hidden">
+        <div id="result" style="display: none;">
             <h2>測試結果</h2>
             <div id="score"></div>
-            <div id="result-text"></div>
-            <button id="restart-btn">重新測試</button>
+            <p id="result-text"></p>
+            <button id="save-result" class="btn">保存結果</button>
+            <button id="view-history" class="btn">查看歷史結果</button>
+        </div>
+        
+        <div id="history" style="display: none;">
+            <h2>歷史結果</h2>
+            <div id="history-list"></div>
+            <button id="back-to-result" class="btn">返回結果</button>
+            <button id="clear-history" class="btn">清除歷史</button>
         </div>
     </div>
     <script src="questions.js"></script>

@@ -172,4 +172,59 @@ function shuffleArray(array) {
         [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
-} 
+}
+
+// 保存結果到本地存儲
+function saveResult(result) {
+    let history = JSON.parse(localStorage.getItem('testHistory') || '[]');
+    history.push({
+        date: new Date().toLocaleString(),
+        result: result,
+        gender: currentGender
+    });
+    localStorage.setItem('testHistory', JSON.stringify(history));
+}
+
+// 顯示歷史記錄
+function showHistory() {
+    document.getElementById('result').style.display = 'none';
+    document.getElementById('history').style.display = 'block';
+    
+    const historyList = document.getElementById('history-list');
+    const history = JSON.parse(localStorage.getItem('testHistory') || '[]');
+    
+    historyList.innerHTML = '';
+    history.reverse().forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        div.innerHTML = `
+            <div class="history-date">${item.date}</div>
+            <div class="history-gender">性別：${item.gender === 'male' ? '男生' : '女生'}</div>
+            <div class="history-result">${item.result}</div>
+        `;
+        historyList.appendChild(div);
+    });
+}
+
+// 清除歷史記錄
+function clearHistory() {
+    if (confirm('確定要清除所有歷史記錄嗎？')) {
+        localStorage.removeItem('testHistory');
+        showHistory();
+    }
+}
+
+// 添加事件監聽器
+document.getElementById('save-result').addEventListener('click', () => {
+    saveResult(document.getElementById('result-text').textContent);
+    alert('結果已保存！');
+});
+
+document.getElementById('view-history').addEventListener('click', showHistory);
+
+document.getElementById('back-to-result').addEventListener('click', () => {
+    document.getElementById('history').style.display = 'none';
+    document.getElementById('result').style.display = 'block';
+});
+
+document.getElementById('clear-history').addEventListener('click', clearHistory); 
