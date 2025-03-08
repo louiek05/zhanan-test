@@ -23,15 +23,6 @@ const scoreElement = document.getElementById('score');
 const resultText = document.getElementById('result-text');
 const nicknameInput = document.getElementById('start-nickname');
 
-// 分享相關的 DOM 元素
-const shareDialog = document.getElementById('share-dialog');
-const shareBtn = document.getElementById('share-result');
-const confirmShareBtn = document.getElementById('confirm-share');
-const cancelShareBtn = document.getElementById('cancel-share');
-const shareMessageInput = document.getElementById('share-message');
-const personalHistoryTab = document.getElementById('personal-history-tab');
-const sharedHistoryTab = document.getElementById('shared-history-tab');
-
 // 監聽暱稱輸入
 nicknameInput.addEventListener('input', () => {
     const nickname = nicknameInput.value.trim();
@@ -71,54 +62,6 @@ document.getElementById('restart-btn').addEventListener('click', () => {
     questionScreen.classList.add('hidden');
     resultDiv.style.display = 'none';
     nicknameInput.value = currentNickname;
-});
-
-// 顯示分享對話框
-shareBtn.addEventListener('click', () => {
-    shareDialog.style.display = 'flex';
-});
-
-// 取消分享
-cancelShareBtn.addEventListener('click', () => {
-    shareDialog.style.display = 'none';
-    shareMessageInput.value = '';
-});
-
-// 確認分享
-confirmShareBtn.addEventListener('click', async () => {
-    const message = shareMessageInput.value.trim();
-    const result = document.getElementById('result-text').textContent;
-    
-    try {
-        // 將結果保存到 Firebase
-        await database.ref('shared-results').push({
-            nickname: currentNickname,
-            message,
-            result,
-            gender: currentGender,
-            timestamp: firebase.database.ServerValue.TIMESTAMP
-        });
-        
-        alert('分享成功！');
-        shareDialog.style.display = 'none';
-        shareMessageInput.value = '';
-    } catch (error) {
-        console.error('分享失敗：', error);
-        alert('分享失敗，請稍後再試。');
-    }
-});
-
-// 切換歷史記錄標籤
-personalHistoryTab.addEventListener('click', () => {
-    personalHistoryTab.classList.add('active');
-    sharedHistoryTab.classList.remove('active');
-    showPersonalHistory();
-});
-
-sharedHistoryTab.addEventListener('click', () => {
-    sharedHistoryTab.classList.add('active');
-    personalHistoryTab.classList.remove('active');
-    showSharedHistory();
 });
 
 function startTest() {
@@ -212,7 +155,7 @@ function showResult() {
     resultText.style.textAlign = 'center';
     scoreElement.textContent = '';  // 清空原本的總分顯示
 
-    // 自動保存結果
+    // 自動保存結果到 Firebase
     saveResult(resultMessage);
 }
 
@@ -236,57 +179,25 @@ function getTypeDescription(type, gender) {
     return descriptions[gender][type];
 }
 
-// Fisher-Yates 洗牌算法
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+// 自動保存結果到 Firebase
+async function saveResult(result) {
+    try {
+        await database.ref('shared-results').push({
+            nickname: currentNickname,
+            result: result,
+            gender: currentGender,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        });
+    } catch (error) {
+        console.error('保存結果失敗：', error);
     }
-    return array;
 }
 
-// 保存結果到本地存儲
-function saveResult(result) {
-    let history = JSON.parse(localStorage.getItem('testHistory') || '[]');
-    history.push({
-        date: new Date().toLocaleString(),
-        nickname: currentNickname,
-        result: result,
-        gender: currentGender
-    });
-    localStorage.setItem('testHistory', JSON.stringify(history));
-}
-
-// 顯示個人歷史記錄
-function showPersonalHistory() {
-    const historyList = document.getElementById('history-list');
-    if (!historyList) return;
-
-    const history = JSON.parse(localStorage.getItem('testHistory') || '[]');
+// 顯示所有人的測試結果
+async function showHistory() {
+    document.getElementById('result').style.display = 'none';
+    document.getElementById('history').style.display = 'block';
     
-    if (history.length === 0) {
-        historyList.innerHTML = '<div class="loading">還沒有任何測試記錄</div>';
-        return;
-    }
-
-    historyList.innerHTML = '';
-    history.reverse().forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'history-item';
-        div.innerHTML = `
-            <div class="history-info">
-                <span class="history-nickname">${item.nickname || '匿名用戶'}</span>
-                <span class="history-date">${item.date}</span>
-            </div>
-            <div class="history-gender">性別：${item.gender === 'male' ? '男生' : '女生'}</div>
-            <div class="history-result">${item.result}</div>
-        `;
-        historyList.appendChild(div);
-    });
-}
-
-// 顯示分享的歷史記錄
-async function showSharedHistory() {
     const historyList = document.getElementById('history-list');
     if (!historyList) return;
 
@@ -307,7 +218,7 @@ async function showSharedHistory() {
         });
 
         if (sharedResults.length === 0) {
-            historyList.innerHTML = '<div class="loading">還沒有人分享測試結果</div>';
+            historyList.innerHTML = '<div class="loading">還沒有人完成測試</div>';
             return;
         }
         
@@ -315,63 +226,27 @@ async function showSharedHistory() {
         sharedResults.reverse().forEach(item => {
             const date = new Date(item.timestamp).toLocaleString();
             const div = document.createElement('div');
-            div.className = 'history-item shared-item';
+            div.className = 'history-item';
             div.innerHTML = `
                 <div class="history-info">
                     <span class="history-nickname">${item.nickname || '匿名用戶'}</span>
                     <span class="history-date">${date}</span>
                 </div>
                 <div class="history-gender">性別：${item.gender === 'male' ? '男生' : '女生'}</div>
-                ${item.message ? `<div class="shared-message">${item.message}</div>` : ''}
                 <div class="history-result">${item.result}</div>
             `;
             historyList.appendChild(div);
         });
     } catch (error) {
-        console.error('載入分享記錄失敗：', error);
+        console.error('載入結果失敗：', error);
         historyList.innerHTML = '<div class="error">載入失敗，請稍後再試</div>';
     }
 }
 
-// 修改 showHistory 函數
-function showHistory() {
-    document.getElementById('result').style.display = 'none';
-    document.getElementById('history').style.display = 'block';
-    
-    // 確保標籤按鈕存在並正確設置
-    if (personalHistoryTab && sharedHistoryTab) {
-        if (personalHistoryTab.classList.contains('active')) {
-            showPersonalHistory();
-        } else if (sharedHistoryTab.classList.contains('active')) {
-            showSharedHistory();
-        } else {
-            personalHistoryTab.classList.add('active');
-            showPersonalHistory();
-        }
-    } else {
-        showPersonalHistory();
-    }
-}
-
-// 清除歷史記錄
-function clearHistory() {
-    if (confirm('確定要清除所有歷史記錄嗎？')) {
-        localStorage.removeItem('testHistory');
-        showHistory();
-    }
-}
-
 // 添加事件監聽器
-document.getElementById('save-result').addEventListener('click', () => {
-    saveResult(document.getElementById('result-text').textContent);
-    alert('結果已保存！');
-});
-
 document.getElementById('view-history').addEventListener('click', showHistory);
 
 document.getElementById('back-to-result').addEventListener('click', () => {
     document.getElementById('history').style.display = 'none';
     document.getElementById('result').style.display = 'block';
-});
-
-document.getElementById('clear-history').addEventListener('click', clearHistory); 
+}); 

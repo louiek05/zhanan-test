@@ -42,34 +42,16 @@
             <p id="result-text"></p>
             <div class="result-buttons">
                 <button id="restart-btn" class="btn">重新測試</button>
-                <button id="share-result" class="btn">分享結果</button>
-                <button id="view-history" class="btn">查看歷史結果</button>
+                <button id="view-history" class="btn">查看大家的結果</button>
             </div>
         </div>
         
         <!-- 歷史記錄畫面 -->
         <div id="history" style="display: none;">
-            <h2>歷史結果</h2>
-            <div class="history-tabs">
-                <button id="personal-history-tab" class="tab-btn active">我的記錄</button>
-                <button id="shared-history-tab" class="tab-btn">大家的分享</button>
-            </div>
+            <h2>大家的測試結果</h2>
             <div id="history-list"></div>
             <div class="history-buttons">
                 <button id="back-to-result" class="btn">返回結果</button>
-                <button id="clear-history" class="btn">清除歷史</button>
-            </div>
-        </div>
-
-        <!-- 分享對話框 -->
-        <div id="share-dialog" class="dialog" style="display: none;">
-            <div class="dialog-content">
-                <h3>分享你的結果</h3>
-                <textarea id="share-message" placeholder="說點什麼..." maxlength="100"></textarea>
-                <div class="dialog-buttons">
-                    <button id="confirm-share" class="btn">確認分享</button>
-                    <button id="cancel-share" class="btn">取消</button>
-                </div>
             </div>
         </div>
     </div>
