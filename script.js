@@ -260,8 +260,15 @@ function saveResult(result) {
 // 顯示個人歷史記錄
 function showPersonalHistory() {
     const historyList = document.getElementById('history-list');
+    if (!historyList) return;
+
     const history = JSON.parse(localStorage.getItem('testHistory') || '[]');
     
+    if (history.length === 0) {
+        historyList.innerHTML = '<div class="loading">還沒有任何測試記錄</div>';
+        return;
+    }
+
     historyList.innerHTML = '';
     history.reverse().forEach(item => {
         const div = document.createElement('div');
@@ -281,6 +288,8 @@ function showPersonalHistory() {
 // 顯示分享的歷史記錄
 async function showSharedHistory() {
     const historyList = document.getElementById('history-list');
+    if (!historyList) return;
+
     historyList.innerHTML = '<div class="loading">載入中...</div>';
     
     try {
@@ -296,6 +305,11 @@ async function showSharedHistory() {
                 id: child.key
             });
         });
+
+        if (sharedResults.length === 0) {
+            historyList.innerHTML = '<div class="loading">還沒有人分享測試結果</div>';
+            return;
+        }
         
         historyList.innerHTML = '';
         sharedResults.reverse().forEach(item => {
@@ -303,8 +317,8 @@ async function showSharedHistory() {
             const div = document.createElement('div');
             div.className = 'history-item shared-item';
             div.innerHTML = `
-                <div class="shared-info">
-                    <span class="shared-nickname">${item.nickname}</span>
+                <div class="history-info">
+                    <span class="history-nickname">${item.nickname || '匿名用戶'}</span>
                     <span class="history-date">${date}</span>
                 </div>
                 <div class="history-gender">性別：${item.gender === 'male' ? '男生' : '女生'}</div>
@@ -319,11 +333,24 @@ async function showSharedHistory() {
     }
 }
 
-// 修改原有的 showHistory 函數
+// 修改 showHistory 函數
 function showHistory() {
     document.getElementById('result').style.display = 'none';
     document.getElementById('history').style.display = 'block';
-    showPersonalHistory(); // 預設顯示個人歷史記錄
+    
+    // 確保標籤按鈕存在並正確設置
+    if (personalHistoryTab && sharedHistoryTab) {
+        if (personalHistoryTab.classList.contains('active')) {
+            showPersonalHistory();
+        } else if (sharedHistoryTab.classList.contains('active')) {
+            showSharedHistory();
+        } else {
+            personalHistoryTab.classList.add('active');
+            showPersonalHistory();
+        }
+    } else {
+        showPersonalHistory();
+    }
 }
 
 // 清除歷史記錄

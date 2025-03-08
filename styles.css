@@ -248,4 +248,62 @@ button:hover {
 .gender-btn[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.history-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+    background-color: #2196F3;
+    color: white;
+}
+
+.history-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.history-nickname {
+    font-weight: bold;
+    color: #2196F3;
+}
+
+.shared-message {
+    color: #666;
+    font-style: italic;
+    margin: 0.5rem 0;
+    padding-left: 1rem;
+    border-left: 2px solid #ddd;
+}
+
+.shared-item {
+    border-left: 4px solid #FF9800;
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+}
+
+.error {
+    text-align: center;
+    padding: 2rem;
+    color: #e74c3c;
 } 
