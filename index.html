@@ -15,9 +15,12 @@
         <div id="start-screen" class="screen">
             <h1>渣男/渣女測試</h1>
             <p>準備好測試自己了嗎？</p>
+            <div class="nickname-input">
+                <input type="text" id="start-nickname" placeholder="請輸入你的暱稱（必填）" maxlength="20" required>
+            </div>
             <div class="gender-selection">
-                <button id="male-btn" class="gender-btn">我是男生</button>
-                <button id="female-btn" class="gender-btn">我是女生</button>
+                <button id="male-btn" class="gender-btn" disabled>我是男生</button>
+                <button id="female-btn" class="gender-btn" disabled>我是女生</button>
             </div>
         </div>
 
@@ -39,7 +42,6 @@
             <p id="result-text"></p>
             <div class="result-buttons">
                 <button id="restart-btn" class="btn">重新測試</button>
-                <button id="save-result" class="btn">保存結果</button>
                 <button id="share-result" class="btn">分享結果</button>
                 <button id="view-history" class="btn">查看歷史結果</button>
             </div>
@@ -63,7 +65,6 @@
         <div id="share-dialog" class="dialog" style="display: none;">
             <div class="dialog-content">
                 <h3>分享你的結果</h3>
-                <input type="text" id="nickname" placeholder="輸入你的暱稱（選填）" maxlength="20">
                 <textarea id="share-message" placeholder="說點什麼..." maxlength="100"></textarea>
                 <div class="dialog-buttons">
                     <button id="confirm-share" class="btn">確認分享</button>

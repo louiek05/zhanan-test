@@ -217,4 +217,35 @@ button:hover {
 
 #restart-btn:hover {
     background-color: #45a049;
+}
+
+.nickname-input {
+    margin-bottom: 1.5rem;
+    width: 100%;
+    max-width: 300px;
+}
+
+.nickname-input input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #3498db;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.nickname-input input:focus {
+    outline: none;
+    border-color: #2980b9;
+    box-shadow: 0 0 5px rgba(41, 128, 185, 0.5);
+}
+
+.nickname-input input::placeholder {
+    color: #95a5a6;
+}
+
+.gender-btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
 } 

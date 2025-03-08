@@ -1,6 +1,7 @@
 let currentQuestions = [];
 let currentQuestionIndex = 0;
 let currentGender = ''; // 'male' 或 'female'
+let currentNickname = ''; // 用戶暱稱
 let scores = {
     flirty: 0,    // 花心型
     cold: 0,      // 冷漠型
@@ -20,26 +21,34 @@ const disagreeBtn = document.getElementById('disagree-btn');
 const questionText = document.getElementById('question-text');
 const scoreElement = document.getElementById('score');
 const resultText = document.getElementById('result-text');
-const restartBtn = document.getElementById('restart-btn');
+const nicknameInput = document.getElementById('start-nickname');
 
 // 分享相關的 DOM 元素
 const shareDialog = document.getElementById('share-dialog');
 const shareBtn = document.getElementById('share-result');
 const confirmShareBtn = document.getElementById('confirm-share');
 const cancelShareBtn = document.getElementById('cancel-share');
-const nicknameInput = document.getElementById('nickname');
 const shareMessageInput = document.getElementById('share-message');
 const personalHistoryTab = document.getElementById('personal-history-tab');
 const sharedHistoryTab = document.getElementById('shared-history-tab');
 
+// 監聽暱稱輸入
+nicknameInput.addEventListener('input', () => {
+    const nickname = nicknameInput.value.trim();
+    maleBtn.disabled = !nickname;
+    femaleBtn.disabled = !nickname;
+});
+
 // 性別選擇按鈕
 maleBtn.addEventListener('click', () => {
     currentGender = 'male';
+    currentNickname = nicknameInput.value.trim();
     startTest();
 });
 
 femaleBtn.addEventListener('click', () => {
     currentGender = 'female';
+    currentNickname = nicknameInput.value.trim();
     startTest();
 });
 
@@ -57,10 +66,11 @@ disagreeBtn.addEventListener('click', () => {
 });
 
 // 重新開始
-restartBtn.addEventListener('click', () => {
+document.getElementById('restart-btn').addEventListener('click', () => {
     startScreen.classList.remove('hidden');
     questionScreen.classList.add('hidden');
     resultDiv.style.display = 'none';
+    nicknameInput.value = currentNickname;
 });
 
 // 顯示分享對話框
@@ -71,20 +81,18 @@ shareBtn.addEventListener('click', () => {
 // 取消分享
 cancelShareBtn.addEventListener('click', () => {
     shareDialog.style.display = 'none';
-    nicknameInput.value = '';
     shareMessageInput.value = '';
 });
 
 // 確認分享
 confirmShareBtn.addEventListener('click', async () => {
-    const nickname = nicknameInput.value.trim() || '匿名用戶';
     const message = shareMessageInput.value.trim();
     const result = document.getElementById('result-text').textContent;
     
     try {
         // 將結果保存到 Firebase
         await database.ref('shared-results').push({
-            nickname,
+            nickname: currentNickname,
             message,
             result,
             gender: currentGender,
@@ -93,7 +101,6 @@ confirmShareBtn.addEventListener('click', async () => {
         
         alert('分享成功！');
         shareDialog.style.display = 'none';
-        nicknameInput.value = '';
         shareMessageInput.value = '';
     } catch (error) {
         console.error('分享失敗：', error);
@@ -204,6 +211,9 @@ function showResult() {
     resultText.style.whiteSpace = 'pre-line';
     resultText.style.textAlign = 'center';
     scoreElement.textContent = '';  // 清空原本的總分顯示
+
+    // 自動保存結果
+    saveResult(resultMessage);
 }
 
 function getTypeDescription(type, gender) {
@@ -240,6 +250,7 @@ function saveResult(result) {
     let history = JSON.parse(localStorage.getItem('testHistory') || '[]');
     history.push({
         date: new Date().toLocaleString(),
+        nickname: currentNickname,
         result: result,
         gender: currentGender
     });
@@ -256,7 +267,10 @@ function showPersonalHistory() {
         const div = document.createElement('div');
         div.className = 'history-item';
         div.innerHTML = `
-            <div class="history-date">${item.date}</div>
+            <div class="history-info">
+                <span class="history-nickname">${item.nickname || '匿名用戶'}</span>
+                <span class="history-date">${item.date}</span>
+            </div>
             <div class="history-gender">性別：${item.gender === 'male' ? '男生' : '女生'}</div>
             <div class="history-result">${item.result}</div>
         `;
