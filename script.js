@@ -35,6 +35,7 @@ maleBtn.addEventListener('click', () => {
     if (!nicknameInput.value.trim()) return;
     currentGender = 'male';
     currentNickname = nicknameInput.value.trim();
+    currentQuestions = maleQuestions;
     startTest();
 });
 
@@ -42,6 +43,7 @@ femaleBtn.addEventListener('click', () => {
     if (!nicknameInput.value.trim()) return;
     currentGender = 'female';
     currentNickname = nicknameInput.value.trim();
+    currentQuestions = femaleQuestions;
     startTest();
 });
 
@@ -73,21 +75,36 @@ document.getElementById('restart-btn').addEventListener('click', () => {
 });
 
 function startTest() {
-    const nickname = document.getElementById('start-nickname').value.trim();
+    const nickname = nicknameInput.value.trim();
     if (!nickname) {
         alert('請輸入暱稱');
         return;
     }
 
-    currentGender = 'male';
     currentNickname = nickname;
-    currentQuestions = maleQuestions;
     currentQuestionIndex = 0;
-    score = 0;
+    resetScores();
 
+    // 隱藏開始畫面
     document.getElementById('start-screen').classList.add('hidden');
-    document.getElementById('question-screen').classList.remove('hidden');
+    
+    // 顯示問題畫面
+    const questionScreen = document.getElementById('question-screen');
+    questionScreen.classList.remove('hidden');
+    document.body.classList.add('question-mode');
+    
+    // 顯示第一個問題
     showQuestion();
+}
+
+function resetScores() {
+    scores = {
+        flirty: 0,
+        cold: 0,
+        scammer: 0,
+        controller: 0,
+        liar: 0
+    };
 }
 
 function showQuestion() {

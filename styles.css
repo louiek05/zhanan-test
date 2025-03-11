@@ -13,10 +13,13 @@ body {
     overflow-x: hidden;
     position: relative;
     background-image: url('images/start-image.jpg');
-    background-size: contain;
-    background-position: top center;
+    background-size: cover;
+    background-position: center;
     background-repeat: no-repeat;
     background-color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 body::before {
@@ -32,9 +35,12 @@ body::before {
 
 .container {
     width: 100%;
+    max-width: 1200px;
     min-height: 100vh;
     position: relative;
     z-index: 2;
+    padding: 20px;
+    margin: 0 auto;
 }
 
 .screen {
@@ -43,8 +49,9 @@ body::before {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     position: relative;
+    padding-top: 50px;
 }
 
 /* 首頁背景圖片 */
@@ -58,7 +65,8 @@ body::before {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: calc(100vw * 0.75); /* 根據圖片比例調整 */
+    justify-content: center;
+    padding: 20px;
 }
 
 #start-screen h1 {
@@ -138,8 +146,9 @@ body::before {
     padding: 2rem;
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 600px;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
 }
 
 .hidden {
@@ -384,7 +393,7 @@ body.question-mode::before {
 }
 
 #question-screen {
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -394,7 +403,15 @@ body.question-mode::before {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     width: 90%;
     max-width: 600px;
+    margin: 0;
     z-index: 3;
+    min-height: auto;
+}
+
+#question-screen.screen {
+    padding-top: 0;
+    justify-content: center;
+    min-height: auto;
 }
 
 #question-text {
@@ -402,4 +419,11 @@ body.question-mode::before {
     color: #2c3e50;
     line-height: 1.6;
     margin-bottom: 2rem;
+    text-align: center;
+}
+
+.question-container {
+    width: 100%;
+    margin: 0;
+    padding: 1rem;
 } 
