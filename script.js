@@ -73,41 +73,21 @@ document.getElementById('restart-btn').addEventListener('click', () => {
 });
 
 function startTest() {
-    try {
-        console.log('Starting test...');
-        // 重置所有分數
-        for (let type in scores) {
-            scores[type] = 0;
-        }
-        
-        // 根據性別獲取問題
-        if (typeof window.getRandomQuestions !== 'function') {
-            console.error('getRandomQuestions is not defined');
-            return;
-        }
-        
-        currentQuestions = window.getRandomQuestions(15, currentGender);
-        console.log('Generated questions:', currentQuestions);
-        
-        if (!currentQuestions || currentQuestions.length === 0) {
-            console.error('No questions generated');
-            return;
-        }
-        
-        currentQuestionIndex = 0;
-        
-        // 隱藏開始畫面，顯示問題畫面
-        startScreen.classList.add('hidden');
-        questionScreen.classList.remove('hidden');
-        resultDiv.style.display = 'none';
-        
-        // 添加問題模式的背景
-        document.body.classList.add('question-mode');
-        
-        showQuestion();
-    } catch (error) {
-        console.error('Error in startTest:', error);
+    const nickname = document.getElementById('start-nickname').value.trim();
+    if (!nickname) {
+        alert('請輸入暱稱');
+        return;
     }
+
+    currentGender = 'male';
+    currentNickname = nickname;
+    currentQuestions = maleQuestions;
+    currentQuestionIndex = 0;
+    score = 0;
+
+    document.getElementById('start-screen').classList.add('hidden');
+    document.getElementById('question-screen').classList.remove('hidden');
+    showQuestion();
 }
 
 function showQuestion() {

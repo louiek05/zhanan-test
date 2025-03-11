@@ -9,14 +9,14 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    width: 100vw;
+    width: 100%;
     overflow-x: hidden;
     position: relative;
     background-image: url('images/start-image.jpg');
-    background-size: cover;
-    background-position: center;
+    background-size: contain;
+    background-position: top center;
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-color: #000;
 }
 
 body::before {
@@ -58,8 +58,7 @@ body::before {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 2rem;
+    padding-top: calc(100vw * 0.75); /* 根據圖片比例調整 */
 }
 
 #start-screen h1 {
@@ -80,7 +79,7 @@ body::before {
 }
 
 .nickname-input {
-    margin-bottom: 2rem;
+    margin: 2rem 0;
     width: 100%;
     max-width: 300px;
 }
@@ -92,18 +91,7 @@ body::before {
     border-radius: 25px;
     font-size: 1.1rem;
     text-align: center;
-    transition: all 0.3s ease;
     background: rgba(255, 255, 255, 0.9);
-}
-
-.nickname-input input:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
-}
-
-.nickname-input input::placeholder {
-    color: #95a5a6;
 }
 
 .gender-selection {
@@ -122,6 +110,8 @@ body::before {
     transition: all 0.3s ease;
     background: rgba(52, 152, 219, 0.9);
     border: 2px solid white;
+    color: white;
+    cursor: pointer;
 }
 
 .gender-btn:hover {
@@ -153,7 +143,7 @@ body::before {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 h2 {
@@ -186,6 +176,16 @@ button {
 button:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+#agree-btn, #disagree-btn {
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
 }
 
 #agree-btn {
@@ -337,32 +337,20 @@ button:hover {
 }
 
 @media screen and (max-width: 768px) {
-    #start-screen h1 {
-        font-size: 2rem;
-        margin: 1.5rem 0;
+    #start-screen {
+        padding-top: calc(100vw * 1); /* 手機版圖片比例調整 */
     }
 
-    #start-screen p {
-        font-size: 1.1rem;
-        margin-bottom: 1.5rem;
+    #start-screen h1 {
+        font-size: 2rem;
     }
 
     .gender-selection {
         flex-direction: column;
-        align-items: center;
     }
 
     .gender-btn {
         width: 100%;
-    }
-
-    #question-screen {
-        width: 95%;
-        padding: 1.5rem;
-    }
-
-    #question-text {
-        font-size: 1.2rem;
     }
 
     .buttons {
@@ -370,7 +358,7 @@ button:hover {
         gap: 0.5rem;
     }
 
-    button {
+    #agree-btn, #disagree-btn {
         width: 100%;
     }
 }
@@ -386,6 +374,11 @@ button:hover {
 }
 
 /* 問題畫面樣式 */
+body.question-mode {
+    background-size: cover;
+    background-position: center;
+}
+
 body.question-mode::before {
     background: rgba(255, 255, 255, 0.85);
 }
@@ -401,7 +394,7 @@ body.question-mode::before {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     width: 90%;
     max-width: 600px;
-    text-align: center;
+    z-index: 3;
 }
 
 #question-text {
